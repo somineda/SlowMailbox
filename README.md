@@ -4,20 +4,30 @@
 
 ## 기능
 
-- 자신의 이메일 주소와 편지 내용을 입력
+### 웹 인터페이스
+- 🎨 **아름다운 웹 페이지**: 감성적인 디자인의 편지 작성 폼
+- 💫 **별이 반짝이는 배경**: 애니메이션 효과
+- 📱 **반응형 디자인**: 모바일, 태블릿, 데스크톱 모두 지원
+
+### 이메일 기능
+- 📧 **HTML 이메일**: 예쁘게 꾸며진 이메일 발송
 - **7일 후** 첫 번째 리마인더 이메일 발송
 - **30일 후** 두 번째 리마인더 이메일 발송
-- 각 이메일에 **png 폴더의 이미지 중 하나를 랜덤으로 첨부**
+- 각 이메일에 **PNG 이미지를 랜덤으로 첨부**
 - "새해 다짐 잊지 않으셨죠?"라는 메시지와 함께 편지 내용 수신
-- 모든 편지 관리 및 조회
+
+### API
+- 편지 생성, 조회 REST API 제공
 
 ## 기술 스택
 
 - FastAPI (비동기 웹 프레임워크)
 - PostgreSQL
 - TortoiseORM (비동기 ORM)
+- Jinja2 (템플릿 엔진)
 - APScheduler
 - Gmail SMTP
+- HTML/CSS/JavaScript (프론트엔드)
 
 ## 설치 및 설정
 
@@ -96,6 +106,67 @@ uvicorn main:app --reload
 
 서버는 `http://localhost:8000`에서 실행됩니다.
 
+## 사용 방법
+
+### 웹 인터페이스로 편지 작성
+
+1. 브라우저에서 `http://localhost:8000` 접속
+2. 아름다운 웹 페이지에서 이메일 주소와 편지 내용 입력
+3. "편지 보내기" 버튼 클릭
+4. 성공 메시지 확인
+5. 7일 후와 30일 후에 이메일 확인!
+
+### API로 편지 작성
+
+직접 API를 호출할 수도 있습니다:
+
+```bash
+curl -X POST "http://localhost:8000/letters/" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "recipient_email": "your_email@gmail.com",
+    "content": "2025년 새해 다짐: 매일 운동하기!"
+  }'
+```
+
+## 테스트
+
+### 테스트 실행
+
+```bash
+# 모든 테스트 실행
+pytest
+
+# 특정 테스트 파일 실행
+pytest tests/test_api.py
+
+# 커버리지 리포트 포함
+pytest --cov=. --cov-report=html
+
+# 상세한 출력
+pytest -v
+```
+
+### 테스트 구조
+
+```
+tests/
+├── conftest.py              # 테스트 설정 및 fixture
+├── test_api.py              # API 엔드포인트 테스트
+├── test_email_service.py    # 이메일 서비스 테스트
+└── test_scheduler.py        # 스케줄러 로직 테스트
+```
+
+### 테스트 커버리지
+
+테스트는 다음을 검증합니다:
+- ✅ 편지 생성 API (7일/30일 발송 시간 설정)
+- ✅ 편지 조회 API (전체/개별/페이지네이션)
+- ✅ 이메일 발송 기능 (첫 번째/두 번째 발송)
+- ✅ PNG 이미지 랜덤 선택 및 첨부
+- ✅ 스케줄러 로직 (발송 시간 체크, 상태 업데이트)
+- ✅ 에러 핸들링 및 예외 처리
+
 ## API 사용법
 
 ### 편지 작성
@@ -137,14 +208,28 @@ happynewyear/
 ├── schemas.py           # Pydantic 스키마
 ├── database.py          # TortoiseORM 초기화
 ├── config.py            # 설정
-├── email_service.py     # 이메일 전송 기능 + PNG 랜덤 첨부
+├── email_service.py     # HTML 이메일 전송 + PNG 랜덤 첨부
 ├── scheduler.py         # 백그라운드 스케줄러
 ├── requirements.txt     # 필요 패키지
+├── pytest.ini           # pytest 설정
 ├── .env.example         # 환경 변수 예시
 ├── .gitignore           # Git 제외 파일
+├── templates/           # Jinja2 템플릿
+│   ├── index.html       # 메인 웹 페이지
+│   └── email_template.html  # HTML 이메일 템플릿
+├── static/              # 정적 파일
+│   ├── css/
+│   │   └── style.css    # 웹페이지 스타일
+│   └── js/
+│       └── main.js      # 폼 제출 로직
 ├── png/                 # 이메일에 첨부할 PNG 이미지 폴더
 │   ├── image1.png
 │   └── image2.png
+├── tests/               # 테스트 파일
+│   ├── conftest.py
+│   ├── test_api.py
+│   ├── test_email_service.py
+│   └── test_scheduler.py
 └── README.md           # 문서
 ```
 
