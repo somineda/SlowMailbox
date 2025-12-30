@@ -35,9 +35,9 @@ async def create_letter(letter: LetterCreate):
 
     now = datetime.now(timezone.utc)
 
-    #발송 시간 계산
-    send_at = now + timedelta(minutes=1)
-    second_send_at = now + timedelta(minutes=2)
+    #발송 시간 계산 (7일 후, 30일 후)
+    send_at = now + timedelta(days=7)
+    second_send_at = now + timedelta(days=30)
 
     #새 편지 생성
     db_letter = await Letter.create(
