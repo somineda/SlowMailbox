@@ -259,7 +259,56 @@ happynewyear/
   - 이미지가 없으면 이메일은 전송되지만 이미지는 첨부되지 않습니다
   - 너무 큰 이미지는 이메일 전송 실패 원인이 될 수 있으니 적절한 크기로 준비하세요 (권장: 1MB 이하)
 
+## 무료 배포 (Render)
+
+### 1. GitHub에 코드 푸시
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/username/slowmail.git
+git push -u origin main
+```
+
+### 2. Render 배포
+
+1. [Render](https://render.com) 가입 (GitHub 계정으로 로그인)
+2. Dashboard → "New" → "Web Service" 클릭
+3. GitHub 저장소 연결
+4. 다음 설정 입력:
+   - **Name**: slowmail
+   - **Environment**: Python 3
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+   - **Plan**: Free
+5. "Create Web Service" 클릭
+
+### 3. PostgreSQL 추가
+
+1. Dashboard → "New" → "PostgreSQL" 클릭
+2. Name: slowmail-db
+3. Plan: Free
+4. "Create Database" 클릭
+
+### 4. 환경 변수 설정
+
+Web Service → Environment 탭에서 추가:
+
+- `DATABASE_URL`: PostgreSQL의 Internal Database URL 복사해서 붙여넣기
+- `SMTP_SERVER`: smtp.gmail.com
+- `SMTP_PORT`: 587
+- `SMTP_USERNAME`: Gmail 주소
+- `SMTP_PASSWORD`: Gmail 앱 비밀번호
+
+### 5. 배포 완료!
+
+- 자동으로 빌드 시작
+- 5-10분 후 배포 완료
+- 할당된 URL로 접속 가능 (예: https://slowmail.onrender.com)
+
+**주의**: Render 무료 플랜은 15분간 요청이 없으면 슬립 모드로 전환됩니다. 첫 접속 시 약간 느릴 수 있습니다.
+
 ## 라이선스
 
 MIT
-# SlowMailbox
